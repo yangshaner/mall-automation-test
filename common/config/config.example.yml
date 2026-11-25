@@ -1,0 +1,72 @@
+default:
+  timeout: 30
+  retry_times: 3
+  verify_ssl: false
+
+dev:
+  admin:
+    base_url: http://127.0.0.1:8080
+    username: admin
+    password: admin123
+
+  member:
+    base_url: http://127.0.0.1:8085
+    username: demo
+    password: demo1234
+
+  database:
+    host: 127.0.0.1
+    port: 3306
+    user: root
+    password: your-db-password
+    database: mall
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    db: 0
+    password: ""
+
+test:
+  admin:
+    base_url: http://test.mall.com:8080
+
+  member:
+    base_url: http://test.mall.com:8085
+
+  database:
+    host: test-db.mall.com
+    port: 3306
+    user: root
+    password: your-db-password
+    database: mall_test
+
+permission:
+  public_apis:
+    - /sso/login
+    - /sso/register
+    - /sso/getAuthCode
+    - /sso/updatePassword
+
+  role_api_mapping:
+    admin:
+      - /admin/**
+      - /product/**
+      - /order/**
+      - /brand/**
+      - /coupon/**
+      - /flash/**
+
+    product_admin:
+      - /product/**
+      - /brand/**
+      - /category/**
+
+    order_admin:
+      - /order/**
+
+    readonly:
+      - /product/**/list
+      - /order/**/list
+      - /brand/**/list
+      - /coupon/**/list

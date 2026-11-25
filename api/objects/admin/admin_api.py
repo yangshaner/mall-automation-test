@@ -1,0 +1,77 @@
+# api/admin/admin_api.py
+import allure
+from typing import Optional, Dict, List
+
+class AdminApi:
+
+    def __init__(self, client):
+        self.client = client
+
+    @allure.step("User login")
+    def login(self, username: str, password: str):
+        return self.client.post("/admin/login", json={
+            "username": username,
+            "password": password
+        })
+
+    @allure.step("User logout")
+    def logout(self):
+        return self.client.post("/admin/logout")
+
+    @allure.step("User registration")
+    def register(self, data: Dict):
+        return self.client.post("/admin/register", json=data)
+
+    @allure.step("Get user list")
+    def list(
+            self,
+            page_num: int = 1,
+            page_size: int = 10,
+            keyword: Optional[str] = None
+    ):
+        params = {"pageNum": page_num, "pageSize": page_size}
+        if keyword:
+            params["keyword"] = keyword
+        return self.client.get("/admin/list", params=params)
+
+    @allure.step("Get user info")
+    def detail(self, admin_id: int):
+        return self.client.get(f"/admin/{admin_id}")
+
+    @allure.step("Get current user info")
+    def get_current_user(self):
+        return self.client.get("/admin/info")
+
+    @allure.step("Update user info")
+    def update(self, admin_id: int, data: Dict):
+        return self.client.post(f"/admin/update/{admin_id}", json=data)
+
+    @allure.step("Update user status")
+    def update_status(self, admin_id: int, status: int):
+        return self.client.post(
+            f"/admin/updateStatus/{admin_id}",
+            params={"status": status}
+        )
+
+    @allure.step("Update user password")
+    def update_password(self, data: Dict):
+        return self.client.post("/admin/updatePassword", json=data)
+
+    @allure.step("Assign roles to user")
+    def update_role(self, admin_id: int, role_ids: List[int]):
+        return self.client.post(
+            "/admin/role/update",
+            params={"adminId": admin_id, "roleIds": role_ids}
+        )
+
+    @allure.step("Get user roles")
+    def get_role_list(self, admin_id: int):
+        return self.client.get(f"/admin/role/{admin_id}")
+
+    @allure.step("Delete user")
+    def delete(self, admin_id: int):
+        return self.client.post(f"/admin/delete/{admin_id}")
+
+    @allure.step("Refresh token")
+    def refresh_token(self):
+        return self.client.get("/admin/refreshToken")
